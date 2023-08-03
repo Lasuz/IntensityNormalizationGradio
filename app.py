@@ -112,7 +112,7 @@ def Norm_image(vol_path,normalization_technique):
 
         img_load = LoadImage(pathName)
         imglist.append(img_load.flatten())
-        gr.Info('The volumes are succesfully loaded.')   
+          
 
         if 'MinMax' in normalization_technique:
             imgNlist.append(NormalizeMinMax(img_load).flatten())
@@ -126,12 +126,13 @@ def Norm_image(vol_path,normalization_technique):
         if 'Percentile (10th - 90th)' in normalization_technique:
             imgNPlist.append(NormalizePercentile(img_load, 10, 90).flatten())
 
-    gr.Info('The different normalization techniques are calculted.')   
+    gr.Info('The volumes are loaded succesfully and different normalization techniques are calculted.')   
 
+    log_scale = False
     plt.figure(11)
     fig, ax = plt.subplots(1,1)
     for i, file in enumerate(vol_path):
-        sns.histplot(data=imglist[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=False,element="step", fill=False,bins=500,legend=True).set(title='Original')
+        sns.histplot(data=imglist[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=log_scale,element="step", fill=False,bins=500,legend=True).set(title='Original')
     ax.legend()
     plt.savefig("Original.png")
     plots=["Original.png"]
@@ -139,7 +140,7 @@ def Norm_image(vol_path,normalization_technique):
     if 'MinMax' in normalization_technique:
         fig, ax = plt.subplots(1,1)
         for i, file in enumerate(vol_path):
-            sns.histplot(data=imgNlist[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=False,element="step", fill=False,bins=500,legend=True).set(title='Min-Max')
+            sns.histplot(data=imgNlist[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=log_scale,element="step", fill=False,bins=500,legend=True).set(title='Min-Max')
         ax.legend()
         plt.savefig("MinMax.png")
         plots.append("MinMax.png")
@@ -147,7 +148,7 @@ def Norm_image(vol_path,normalization_technique):
     if 'Z-Score' in normalization_technique:
         fig, ax = plt.subplots(1,1)
         for i, file in enumerate(vol_path):
-            sns.histplot(data=imgNZlist[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=False,element="step", fill=False,bins=500,legend=True).set(title='Z-Score')
+            sns.histplot(data=imgNZlist[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=log_scale,element="step", fill=False,bins=500,legend=True).set(title='Z-Score')
         ax.legend()
         plt.savefig("Zscore.png")
         plots.append("Zscore.png")
@@ -156,7 +157,7 @@ def Norm_image(vol_path,normalization_technique):
     if 'Percentile (2th - 98th)'in normalization_technique:
         fig, ax = plt.subplots(1,1)
         for i, file in enumerate(vol_path):
-            sns.histplot(data=imgNPer98list[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=False,element="step", fill=False,bins=500,legend=True).set(title='Percentile 2-98')
+            sns.histplot(data=imgNPer98list[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=log_scale,element="step", fill=False,bins=500,legend=True).set(title='Percentile 2-98')
         ax.legend()
         plt.savefig("Per98.png")
         plots.append("Per98.png")
@@ -164,17 +165,19 @@ def Norm_image(vol_path,normalization_technique):
     if 'Percentile (10th - 90th)' in normalization_technique:
         fig, ax = plt.subplots(1,1)
         for i, file in enumerate(vol_path):
-            sns.histplot(data=imgNPlist[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=False,element="step", fill=False,bins=500,legend=True).set(title='Percentile 10 - 90')
+            sns.histplot(data=imgNPlist[i].flatten(), kde=False, label=os.path.basename(file.name)[0:25], log_scale=log_scale,element="step", fill=False,bins=500,legend=True).set(title='Percentile 10 - 90')
         ax.legend()
         plt.savefig("Per90.png")
         plots.append("Per90.png")
         
-    gr.Info('The histograms are produced.')   
+
 
     return plots
 
 
-description = 'You can upload mutiple image volumes (recommonded 3-5) in *.nii or *.nii.gz to see their histograms for multiple normalization techniques. Depending on file size and selected techniques it might take a while to do the calculations. \n The uploaded data is not stored and gets deleted once closing the window. '
+description = 'You can upload mutiple image volumes (recommonded 3-5). The files get read by ITK so mulitple different file formats are possible (e.g. *.nii , *.nii.gz, png,..). You need to wait until the data is uploaded. \
+    Once pressing submit the histograms for multiple normalization techniques are calculated. Depending on file size and selected techniques it might take a while to do the calculations. \
+          \n The uploaded data is not stored and is deleted once the window is closed. '
 
 inputs = [gr.File(file_count="multiple", label=None),gr.CheckboxGroup(["MinMax", "Z-Score", "Percentile (2th - 98th)", "Percentile (10th - 90th)"])]
 demo = gr.Interface(fn=Norm_image,
