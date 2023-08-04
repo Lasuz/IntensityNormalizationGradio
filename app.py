@@ -175,7 +175,7 @@ def Norm_image(vol_path,normalization_technique):
     return plots
 
 
-description = 'You can upload mutiple image volumes (recommonded 3-5). The files get read by ITK so mulitple different file formats are possible (e.g. *.nii , *.nii.gz, png,..). You need to wait until the data is uploaded. \
+description = 'You can upload mutiple image volumes (recommonded 3-5). The files get read by ITK so mulitple different file formats are possible (e.g. *.nii , *.nii.gz, jpeg,..). You need to wait until the data is uploaded. \
     Once pressing submit the histograms for multiple normalization techniques are calculated. Depending on file size and selected techniques it might take a while to do the calculations. \
           \n The uploaded data is not stored and is deleted once the window is closed. '
 
