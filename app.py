@@ -64,14 +64,14 @@ def NormalizeMinMax(img):
     minVal = np.nanmin(img)
     maxVal = np.nanmax(img)
  
-    img_normalized = (img - minVal)/(maxVal- minVal)
+    img_normalized = (img - minVal)*(1/(maxVal- minVal))
     return img_normalized
 
 def NormalizePercentile(img, minP, maxP):
     #Normalization for Volumes
     minVal = np.nanpercentile(img, minP)
     maxVal = np.nanpercentile(img, maxP)
-    img_normalized = (img - minVal)/(maxVal- minVal)  
+    img_normalized = (img - minVal)*(1/(maxVal- minVal))
     return img_normalized
 
 def NormalizeZScore(img):
@@ -79,7 +79,7 @@ def NormalizeZScore(img):
     meanVal = np.nanmean(img)
     stdVal = np.nanstd(img)
      
-    img_normalized = (img-meanVal)/stdVal
+    img_normalized = (img-meanVal)*(1/stdVal)
     
     return img_normalized
  
@@ -126,7 +126,7 @@ def Norm_image(vol_path,normalization_technique):
         if 'Percentile (10th - 90th)' in normalization_technique:
             imgNPlist.append(NormalizePercentile(img_load, 10, 90).flatten())
 
-    gr.Info('The volumes are loaded succesfully and different normalization techniques are calculted.')   
+    gr.Info('The volumes are loaded succesfully and different normalization techniques are calculated.')   
 
     log_scale = False
     plt.figure(11)
